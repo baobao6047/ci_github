@@ -1,0 +1,80 @@
+/* 栅格列表 */
+.row-table .rt-head {
+  padding: 20px 0;
+}
+.row-table .rt-head .input {
+  height: 30px;
+}
+.row-table .rt-head .select {
+  height: 30px;
+}
+.row-table .rt-head .btn {
+  height: 30px;
+}
+.row-table .rt-head .txt {
+  line-height: 28px;
+}
+.row-table .rt-head .txt-tr {
+  text-align: right;
+}
+.row-table .rt-table a {
+  margin-right: 5px;
+}
+.row-table .rt-table td {
+  height: 74px;
+}
+.row-table .rt-table .img-min {
+  width: 43px;
+  height: 43px;
+}
+.row-table .rt-table .btn-toggle-on,
+.row-table .rt-table .btn-toggle-off {
+  position: relative;
+  color: #fff;
+  text-align: left;
+  display: inline-block;
+  vertical-align: top;
+  background: #F86769;
+  width: 60px;
+  height: 26px;
+  border-radius: 14px;
+}
+.row-table .rt-table .btn-toggle-on i,
+.row-table .rt-table .btn-toggle-off i {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  line-height: 26px;
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  background: #fff;
+  border-radius: 10px;
+}
+.row-table .rt-table .btn-toggle-on span,
+.row-table .rt-table .btn-toggle-off span {
+  display: inline-block;
+  position: absolute;
+  left: 5px;
+}
+.row-table .rt-table .btn-toggle-off {
+  background: #989898;
+}
+.row-table .rt-table .btn-toggle-off i {
+  right: 37px;
+}
+.row-table .rt-table .btn-toggle-off span {
+  left: 27px;
+}
+.row-table .txt-red {
+  color: #F86780;
+}
+.row-table .ml5 {
+  margin-left: 5px;
+}
+.row-table .btn-white {
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+/* 栅格列表END */
