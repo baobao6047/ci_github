@@ -6,7 +6,6 @@ class Welcome extends CI_Controller {
 
 	function __construct()
 	{
-        echo 'welcome-controller';die;
 		$this->cur_page = intval($this->uri->segment(3));
         if ($this->cur_page < 1) {
             $this->cur_page = 1;
