@@ -11,7 +11,6 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
-        echo 'welcome';die;
         $src_path = APPPATH . 'src';
         echo $src_path;
 
