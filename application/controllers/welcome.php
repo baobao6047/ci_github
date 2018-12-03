@@ -6,11 +6,7 @@ class Welcome extends CI_Controller {
 
 	function __construct()
 	{
-		$this->cur_page = intval($this->uri->segment(3));
-        if ($this->cur_page < 1) {
-            $this->cur_page = 1;
-        }
-        $this->offset = ($this->cur_page - 1) * self::PER_PAGE;
+        parent::__construct();
 	}
 
 	public function index()
