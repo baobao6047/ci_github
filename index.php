@@ -1,5 +1,4 @@
 <?php
-echo 'ci_demo';die;
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

@@ -17,6 +17,7 @@ class Welcome extends Base_controller {
 
 	public function index()
 	{
+        echo 'welcome';die;
         $src_path = APPPATH . 'src';
         echo $src_path;
 
