@@ -1,13 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends Base_controller {
+class Welcome extends CI_Controller {
 
 	const PER_PAGE = 10; // 每页显示的条数
 
 	function __construct()
 	{
-		parent::__construct();
-
+        echo 'welcome-controller';die;
 		$this->cur_page = intval($this->uri->segment(3));
         if ($this->cur_page < 1) {
             $this->cur_page = 1;
