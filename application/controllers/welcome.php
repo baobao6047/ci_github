@@ -13,6 +13,8 @@ class Welcome extends CI_Controller {
 	{
         $src_path = APPPATH . 'src';
         echo $src_path;
+        echo '本地';
+        echo $this->config->item('domain_src') . 'common/js/seajs/sea.js';
 
 		// echo 'this is a welcome p';
 		// echo '<br/>';
