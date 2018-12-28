@@ -10,7 +10,6 @@ class Welcome_model extends CI_Model
 
     public function test($table, $where)
     {
-        var_dump($this->db);die;
         return $this->db->get_where($table, $where)->row_array();
     }
 

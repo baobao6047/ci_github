@@ -7,17 +7,23 @@ class Welcome extends CI_Controller {
 	function __construct()
 	{
         parent::__construct();
+        $this->load->model('welcome_model');
 	}
 
-	public function index()
+	public function index($defo = 'moren')
 	{
+        $test = $this->welcome_model->test('experiencer', array('uid' => 54));
+        print_r($test);
+        echo '<hr>';
+        $temp = extension_loaded('mysql');
+        var_dump($temp);
         $src_path = APPPATH . 'src';
         echo $src_path;
-        echo '本地';
         echo $this->config->item('domain_src') . 'common/js/seajs/sea.js';
+        echo "<hr>";
+        echo $defo;
+        echo "<hr>";
 
-		// echo 'this is a welcome p';
-		// echo '<br/>';
 		$this->load->view('welcome', compact("src_path"));
     }
     

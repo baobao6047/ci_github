@@ -48,12 +48,12 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+$db['default']['hostname'] = '118.24.178.199';
 $db['default']['username'] = 'root';
 $db['default']['password'] = 'bao1001';
-$db['default']['database'] = '';
-$db['default']['dbdriver'] = 'mysql';
-$db['default']['dbprefix'] = '';
+$db['default']['database'] = 'o2o';
+$db['default']['dbdriver'] = 'mysqli';
+$db['default']['dbprefix'] = 'sk_';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = FALSE;
