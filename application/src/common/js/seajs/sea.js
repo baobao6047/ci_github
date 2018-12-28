@@ -200,8 +200,8 @@ var _url = _host.substr(_host.indexOf('.') + 1, _host.length) + '/';
 var _int = _host.split('.').length - 1;
 var hostUrl = _host.split('.')[_int - 1];
 var staticUrl = '';
-if (hostUrl == 'lcc') { /*三级域名 线上设置*/
-    staticUrl = "http://statico2o." + hostUrl + ".com/";
+if (hostUrl == 'lecc') { /*三级域名 线上设置*/
+    staticUrl = "http://src." + hostUrl + ".xyz/";
 } else { /*本地设置*/
     staticUrl = "http://src." + hostUrl + ".com/";
 }

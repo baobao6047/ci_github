@@ -15,7 +15,7 @@
 	<script>
 		var _host = window.location.host;
 		var hostUrl = _host.split('.')[_int-1];
-		console.log(hostUrl == 'lcc1');
+		console.log(hostUrl);
 		// alert(hostUrl);
 	</script>
 	<script type="text/javascript" src="<?php echo $this->config->item('domain_src'); ?>lcc/js/tts.js?v=<?php echo time()?>"></script>
