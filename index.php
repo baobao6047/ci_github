@@ -1,7 +1,4 @@
 <?php
-
-echo 'this is test!?';die;
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
