@@ -43,6 +43,11 @@ class Welcome extends CI_Controller {
             echo $this->_back_xml('xml解析失败');
             exit;
         }
+
+        $this->notify_model->xml_notify($xml);
+
+        echo $this->_back_xml('OK', true);
+        exit;
     }
 
     private function _back_xml($msg = '', $state = false)
