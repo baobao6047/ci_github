@@ -46,4 +46,17 @@ class Welcome_model extends CI_Model
         $ret = $this->db->get('goods_category')->result_array();
         return $ret;
     }
+
+    public function xml_notify($xml)
+    {
+        $result = $this->db->where('xml', $xml)->get('wxpay_notify')->row_array();
+        if (!empty($result)) {
+            return $result['id'];
+        }
+        $this->db->insert('wxpay_notify', array(
+            'xml' => $xml,
+            'dateline' => time()
+        ));
+        return $this->db->insert_id();
+    }
 }

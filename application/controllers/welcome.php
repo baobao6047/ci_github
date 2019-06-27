@@ -31,6 +31,25 @@ class Welcome extends CI_Controller {
         $json = json_encode($ret);
         die(isset($_GET['callback']) ? $_GET['callback'] . "($json)" : $json);
     }
+
+    public function notify_xml()
+    {
+        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        !$xml && exit();
+
+        libxml_disable_entity_loader(true);
+        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
+        if (!$values) {
+            echo $this->_back_xml('xml解析失败');
+            exit;
+        }
+    }
+
+    private function _back_xml($msg = '', $state = false)
+    {
+        $error = $state ? 'SUCCESS' : 'FAIL';
+        return printf('<xml><return_code><![CDATA[%s]]></return_code><return_msg><![CDATA[%s]]></return_msg></xml>', $error, $msg);
+    }
 }
 
 /* End of file welcome.php */
