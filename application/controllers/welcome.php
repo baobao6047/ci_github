@@ -34,8 +34,11 @@ class Welcome extends CI_Controller {
 
     public function notify_xml()
     {
-        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
-        !$xml && exit();
+        $xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
+        if (!$xml) {
+            echo $this->_back_xml('未接收到xml');
+            exit;
+        }
 
         libxml_disable_entity_loader(true);
         $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
