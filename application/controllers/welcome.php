@@ -28,6 +28,7 @@ class Welcome extends CI_Controller {
     public function test()
     {
         $ret = 'test文件';
+        echo $ret;die;
         $json = json_encode($ret);
         die(isset($_GET['callback']) ? $_GET['callback'] . "($json)" : $json);
     }
