@@ -27,6 +27,12 @@ class Welcome extends CI_Controller {
     
     public function test()
     {
+        $code = $_GET['code'];
+        if ($code) {
+            echo $code;die;
+        } else {
+            echo '接收不到';die;
+        }
         $ret = 'test文件';
         echo $ret;die;
         $json = json_encode($ret);
