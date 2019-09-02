@@ -39,3 +39,6 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
+
+define('APPID', 'wx471a9d2f5eeaa7ad');
+define('SECRET', 'e65519bbe99e91682aaf6eea84f38c78');
