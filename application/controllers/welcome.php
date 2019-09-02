@@ -12,6 +12,7 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
+        echo 5535;die;
         $test = $this->welcome_model->test('experiencer', array('uid' => 54));
         print_r($test);
         echo '<hr>';
@@ -42,7 +43,7 @@ class Welcome extends CI_Controller {
 
     public function wx_check_user()
     {
-        $code = $this->get_string('code');
+        $code = $this->input->get_post('code', true);
         $url = 'https://api.weixin.qq.com/sns/jscode2session';
         $data = array(
             'appid' => APPID,
