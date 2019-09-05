@@ -12,16 +12,7 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
-        echo 5535;die;
-        $test = $this->welcome_model->test('experiencer', array('uid' => 54));
-        print_r($test);
-        echo '<hr>';
-        $src_path = APPPATH . 'src';
-        echo $src_path;
-        echo $this->config->item('domain_src') . 'common/js/seajs/sea.js';
-        echo "<hr>";
-        echo '最新';
-        echo "<hr>";
+        echo '欢迎页';die;
 
 		$this->load->view('welcome', compact("src_path"));
     }
@@ -54,103 +45,38 @@ class Welcome extends CI_Controller {
         $wx_info = $this->soap_call($url, $data, true);
 
         if ($wx_info === false || $wx_info === null) {
-            $this->failure(3, '微信登陆失败');
+            callback_error('微信登陆失败');
         }
         if (isset($wx_info['errcode'])) {
-            $this->failure(4, $wx_info['errcode'] . ':' . $wx_info['errmsg']);
-        }
-        $this->success(200, 'ok', ['openid' => $wx_info['openid']]);
-    }
-
-    public function notify_xml()
-    {
-        $xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        if (!$xml) {
-            echo $this->_back_xml('未接收到xml');
-            exit;
+            callback_error($wx_info['errcode'] . ':' . $wx_info['errmsg']);
         }
 
-        libxml_disable_entity_loader(true);
-        $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-        if (!$values) {
-            echo $this->_back_xml('xml解析失败');
-            exit;
-        }
+        $client['client_type'] = 3;//1安卓，2苹果，3小程序，4公众号
+        $client['dateline'] = time();
+        $client['login_ip'] = ip('int');
 
-        $this->notify_model->xml_notify($xml);
+        $wxdata = array(
+            'last_login_ip' => ip('int'),
+            'last_login_time' => time(),
+            'token' => md5(md5($wx_info['openid']) . time())
+        );
 
-        echo $this->_back_xml('OK', true);
-        exit;
-    }
-
-    private function _back_xml($msg = '', $state = false)
-    {
-        $error = $state ? 'SUCCESS' : 'FAIL';
-        return printf('<xml><return_code><![CDATA[%s]]></return_code><return_msg><![CDATA[%s]]></return_msg></xml>', $error, $msg);
-    }
-
-    protected function failure($code = 0, $msg = '', $data = [], $ui_name = "alert", $output = true)
-    {
-        $json_str = json_encode(['code' => $code + 0, "success" => false, "msg" => $msg, "ui_name" => $ui_name, "data" => $data], JSON_UNESCAPED_UNICODE);
-
-        if ($output) {
-            die($this->callback_json($json_str));
+        $wxuser = $this->login_model->wx_user(array('openid' => $wx_info['openid']));
+        if (empty($wxuser)) {
+            $wxdata['user_type'] = 1;
+            $wxdata['openid'] = $wx_info['openid'];
+            $wxdata['dateline'] = time();
+            $wxdata['reg_ip'] = ip('int');
+            $wxdata['reg_time'] = time();
+            $client['openid'] = $wx_info['openid'];
+            $wuid = $this->login_model->insert_wxlogin($client, $wxdata);
         } else {
-            return $this->callback_json($json_str);
+            $wuid = $this->login_model->update_wxlogin(array('openid' => $wx_info['openid']), $client, $wxdata);
         }
+
+        callback_success(array('wuid' => $wuid, 'token' => $wxdata['token']));
     }
 
-    protected function success($code = 0, $msg = '', $data = [], $ui_name = "alert", $output = true)
-    {
-        $json_str = json_encode(['code' => $code + 0, "success" => true, "msg" => $msg, "ui_name" => $ui_name, "data" => $data], JSON_UNESCAPED_UNICODE);
-
-        if ($output) {
-            die($this->callback_json($json_str));
-        } else {
-            return $this->callback_json($json_str);
-        }
-    }
-
-    private function callback_json($json)
-    {
-        return isset($_GET['callback']) && !$_GET['callback'] ? trim($_GET['callback']) . "($json)" : $json;
-    }
-
-    protected function soap_call($url, $data = null, $esolve = false, $use_cert = false)
-    {
-        try {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //将curl_exec()获取的信息以文件流的形式返回，而不是直接输出。
-            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-            if ($data) {
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            }
-
-            if($use_cert == true){
-                $sslCertPath = SSLCERTPATH;
-                $sslKeyPath = SSLKEYPATH;
-                curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
-                curl_setopt($ch,CURLOPT_SSLCERT, $sslCertPath);
-                curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-                curl_setopt($ch,CURLOPT_SSLKEY, $sslKeyPath);
-            }
-
-            $output = curl_exec($ch);
-            if ($esolve) {
-                $output = json_decode($output, true);
-            }
-            curl_close($ch);
-        } catch (Exception $e) {
-            $this->error = $e->getMessage();
-            return false;
-        }
-        return $output;
-    }
 }
 
 /* End of file welcome.php */

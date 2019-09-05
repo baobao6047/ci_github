@@ -8,9 +8,21 @@ class Welcome_model extends CI_Model
         $this->db = $this->load->database('default', TRUE);
     }
 
-    public function test($table, $where)
+    public function wx_user($condition = '', $select = '*')
     {
-        return $this->db->get_where($table, $where)->row_array();
+        return $this->db->select($select)->where($condition)->get('wx_user')->row_array();
+    }
+
+    public function get_table($table, $condition = '', $colunm = '*', $arr = false)
+    {
+        if ($condition) {
+            $this->db->where($condition);
+        }
+        if ($arr) {
+            return $this->db->select($colunm)->get($table)->result_array();
+        } else {
+            return $this->db->select($colunm)->get($table)->row_array();
+        }
     }
 
     /**
