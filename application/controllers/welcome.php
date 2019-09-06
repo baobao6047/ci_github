@@ -42,7 +42,7 @@ class Welcome extends CI_Controller {
             'js_code' => $code,
             'grant_type' => 'authorization_code'
         );
-        $wx_info = $this->soap_call($url, $data, true);
+        $wx_info = soap_call($url, $data, true);
 
         if ($wx_info === false || $wx_info === null) {
             callback_error('微信登陆失败');
@@ -61,7 +61,7 @@ class Welcome extends CI_Controller {
             'token' => md5(md5($wx_info['openid']) . time())
         );
 
-        $wxuser = $this->login_model->wx_user(array('openid' => $wx_info['openid']));
+        $wxuser = $this->welcome_model->wx_user(array('openid' => $wx_info['openid']));
         if (empty($wxuser)) {
             $wxdata['user_type'] = 1;
             $wxdata['openid'] = $wx_info['openid'];
@@ -69,9 +69,9 @@ class Welcome extends CI_Controller {
             $wxdata['reg_ip'] = ip('int');
             $wxdata['reg_time'] = time();
             $client['openid'] = $wx_info['openid'];
-            $wuid = $this->login_model->insert_wxlogin($client, $wxdata);
+            $wuid = $this->welcome_model->insert_wxlogin($client, $wxdata);
         } else {
-            $wuid = $this->login_model->update_wxlogin(array('openid' => $wx_info['openid']), $client, $wxdata);
+            $wuid = $this->welcome_model->update_wxlogin(array('openid' => $wx_info['openid']), $client, $wxdata);
         }
 
         callback_success(array('wuid' => $wuid, 'token' => $wxdata['token']));

@@ -13,6 +13,44 @@ class Welcome_model extends CI_Model
         return $this->db->select($select)->where($condition)->get('wx_user')->row_array();
     }
 
+    public function insert_wxlogin($param, $wx_param)
+    {
+        $this->db->trans_begin();
+
+        $this->db->insert('wx_login_client', $param);
+
+        $this->db->insert('wx_user', $wx_param);
+        $wu_user_id = $this->db->insert_id();
+
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return $wu_user_id;
+        }
+    }
+
+    public function update_wxlogin($condition = '', $param, $wx_param)
+    {
+        $this->db->trans_begin();
+
+        $this->db->where($condition)->update('wx_login_client', $param);
+        $this->db->where($condition)->update('wx_user', $wx_param);
+        $wx_user = $this->db->where($condition)->get('wx_user')->row_array();
+        if ($wx_user['uid']) {
+            $this->db->where(array('uid' => $wx_user['uid']))->update('user', array('last_login_ip' => ip('int'), 'last_login_time' => time()));
+        }
+
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return $wx_user['id'];
+        }
+    }
+
     public function get_table($table, $condition = '', $colunm = '*', $arr = false)
     {
         if ($condition) {
