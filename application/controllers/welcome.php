@@ -31,10 +31,61 @@ class Welcome extends CI_Controller {
         die(isset($_GET['callback']) ? $_GET['callback'] . "($json)" : $json);
     }
 
-
+    /**
+     * 获取 & 更新 用户信息
+     */
     public function wx_check_user()
     {
-        $code = $this->input->get_post('code', true);
+        $wx_info = this->_wx_info(); // 从微信服务器获取用户信息
+        
+        $wxuser = $this->welcome_model->wx_user(array('openid' => $wx_info['openid']));
+        if (!$wxuser || !$wxuser['mobile']) {
+            callback_error('还未注册，请先进行注册');
+        }
+
+        $wxdata = array(
+            'last_login_ip' => ip('int'),
+            'last_login_time' => time(),
+            'token' => md5(md5($wx_info['openid']) . time())
+        );
+        $wuid = $this->welcome_model->update_wxlogin($wx_info['openid'], $wxdata);
+
+        callback_success(array('wuid' => $wuid, 'token' => $wxdata['token']));
+    }
+
+    /**
+     * 注册
+     */
+    public function register()
+    {
+        $mobile = trim($this->input->get_post('mobile', true));
+        $mobile OR callback_error('请传入手机号');
+        // TODO 验证手机格式没做~懒
+        $wxuser = $this->welcome_model->wx_user(array('mobile' => $mobile));
+        $wxuser AND callback_error('该手机号已注册，请换个手机号注册');
+        $wx_info = this->_wx_info(); // 从微信服务器获取用户信息
+
+        $wxdata = array(
+            'mobile' => $mobile,
+            'dateline' => time(),
+            'reg_ip' => ip('int'),
+            'reg_time' => time(),
+            'last_login_ip' => ip('int'),
+            'last_login_time' => time(),
+            'openid' => $wx_info['openid'],
+            'token' => md5(md5($wx_info['openid']) . time()),
+        );
+        $wuid = $this->welcome_model->insert_wxlogin($wxdata);
+
+        callback_success(array('wuid' => $wuid, 'token' => $wxdata['token']));
+    }
+
+    /**
+     * 通过小程序code -> 从微信服务器 -> 获取用户openid等信息
+     */
+    private function _wx_info()
+    {
+        $code = trim($this->input->get_post('code', true));
         $url = 'https://api.weixin.qq.com/sns/jscode2session';
         $data = array(
             'appid' => APPID,
@@ -50,31 +101,7 @@ class Welcome extends CI_Controller {
         if (isset($wx_info['errcode'])) {
             callback_error($wx_info['errcode'] . ':' . $wx_info['errmsg']);
         }
-
-        $client['client_type'] = 3;//1安卓，2苹果，3小程序，4公众号
-        $client['dateline'] = time();
-        $client['login_ip'] = ip('int');
-
-        $wxdata = array(
-            'last_login_ip' => ip('int'),
-            'last_login_time' => time(),
-            'token' => md5(md5($wx_info['openid']) . time())
-        );
-
-        $wxuser = $this->welcome_model->wx_user(array('openid' => $wx_info['openid']));
-        if (empty($wxuser)) {
-            $wxdata['user_type'] = 1;
-            $wxdata['openid'] = $wx_info['openid'];
-            $wxdata['dateline'] = time();
-            $wxdata['reg_ip'] = ip('int');
-            $wxdata['reg_time'] = time();
-            $client['openid'] = $wx_info['openid'];
-            $wuid = $this->welcome_model->insert_wxlogin($client, $wxdata);
-        } else {
-            $wuid = $this->welcome_model->update_wxlogin(array('openid' => $wx_info['openid']), $client, $wxdata);
-        }
-
-        callback_success(array('wuid' => $wuid, 'token' => $wxdata['token']));
+        return $wx_info;
     }
 
 }
