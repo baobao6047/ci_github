@@ -36,7 +36,7 @@ class Welcome extends CI_Controller {
      */
     public function wx_check_user()
     {
-        $wx_info = this->_wx_info(); // 从微信服务器获取用户信息
+        $wx_info = $this->_wx_info(); // 从微信服务器获取用户信息
         
         $wxuser = $this->welcome_model->wx_user(array('openid' => $wx_info['openid']));
         if (!$wxuser || !$wxuser['mobile']) {
@@ -63,7 +63,7 @@ class Welcome extends CI_Controller {
         // TODO 验证手机格式没做~懒
         $wxuser = $this->welcome_model->wx_user(array('mobile' => $mobile));
         $wxuser AND callback_error('该手机号已注册，请换个手机号注册');
-        $wx_info = this->_wx_info(); // 从微信服务器获取用户信息
+        $wx_info = $this->_wx_info(); // 从微信服务器获取用户信息
 
         $wxdata = array(
             'mobile' => $mobile,
