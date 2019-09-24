@@ -59,20 +59,25 @@ class Welcome extends CI_Controller {
     public function register()
     {
         $mobile = trim($this->input->get_post('mobile', true));
+        $nickname = trim($this->input->get_post('nickname', true));
+        $avatar = trim($this->input->get_post('avatar', true));
         $mobile OR callback_error('请传入手机号');
         // TODO 验证手机格式没做~懒
         $wxuser = $this->welcome_model->wx_user(array('mobile' => $mobile));
         $wxuser AND callback_error('该手机号已注册，请换个手机号注册');
         $wx_info = $this->_wx_info(); // 从微信服务器获取用户信息
 
+        // TODO 头像~昵称写入  从wx.getSetting中获取
         $wxdata = array(
+            'openid' => $wx_info['openid'],
+            'nickname' => $nickname,
+            'avatar' => $avatar,
             'mobile' => $mobile,
             'dateline' => time(),
             'reg_ip' => ip('int'),
             'reg_time' => time(),
             'last_login_ip' => ip('int'),
             'last_login_time' => time(),
-            'openid' => $wx_info['openid'],
             'token' => md5(md5($wx_info['openid']) . time()),
         );
         $wuid = $this->welcome_model->insert_wxlogin($wxdata);

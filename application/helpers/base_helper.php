@@ -2,9 +2,7 @@
 
 function callback_success($data = null)
 {
-    $ret = array(
-        'success' => true,
-    );
+    $ret['success'] = true;
     if ($data !== null) {
         $ret['data'] = $data;
     }
@@ -16,9 +14,7 @@ function callback_success($data = null)
 
 function callback_error($data = null)
 {
-    $ret = array(
-        'success' => false,
-    );
+    $ret['success'] = false;
     if ($data !== null) {
         $ret['data'] = $data;
     }
