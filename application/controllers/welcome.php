@@ -19,8 +19,7 @@ class Welcome extends CI_Controller {
     
     public function test()
     {
-        echo 'test';
-        callback_error('还未注册，请先进行注册');
+        callback_error('test');
         return $_SERVER['HTTP_REFERER'];
     }
 
