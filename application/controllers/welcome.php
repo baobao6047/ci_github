@@ -20,7 +20,7 @@ class Welcome extends CI_Controller {
     public function test()
     {
         $result['code'] = 111;
-        $result['msg'] = $_SERVER['HTTP_REFERER'];
+        $result['msg'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '木有啊';
         exit(json_encode($result, true));
     }
 
