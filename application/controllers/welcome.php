@@ -19,8 +19,9 @@ class Welcome extends CI_Controller {
     
     public function test()
     {
-        callback_error('test');
-        return $_SERVER['HTTP_REFERER'];
+        $result['code'] = 111;
+        $result['msg'] = $_SERVER['HTTP_REFERER'];
+        exit(json_encode($result, true));
     }
 
     /**
